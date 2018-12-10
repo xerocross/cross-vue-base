@@ -34,8 +34,6 @@ export default {
         logThis : {
             type : "function",
             default : function() {
-
-
             }
         },
         textOptions : {
@@ -73,6 +71,7 @@ export default {
         getText () {
             this.isTextLoaded = false;
             let self = this;
+            self.$emit("event_loading");
             SimpleQajax.execute({
                 URL : this.textURL,
                 method : "GET"
@@ -82,7 +81,7 @@ export default {
                 self.currentLoadedText = self.getTextByKey(self.currentTextOption).name;
                 self.$emit("event_text_loaded", self.rawText);
             }).fail(function(e) {
-                window.console.log(e);
+                self.$emit("event_error_loading_text");
                 alert("Sorry: There was a problem loading the text.");
             });
 
