@@ -4,7 +4,7 @@
             <div class="form-group">
                 <div class="alert alert-info">Loaded: {{ currentLoadedText }}</div>
                 <label>
-                    Choose a Study Set: {{ currentTextOption }}
+                    Choose a File
                 </label>
                 <select 
                     v-model="currentTextOption" 
