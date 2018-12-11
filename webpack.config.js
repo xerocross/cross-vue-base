@@ -4,7 +4,6 @@ const webpack = require('webpack')
 
 module.exports = {
     entry : {
-    //    'demoindex' : './src/demoindex.js',
         'index' : './src/index.js'
     },
     output : {
