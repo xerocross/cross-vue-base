@@ -80,6 +80,7 @@ export default {
                 self.rawText = response.responseText;
                 self.currentLoadedText = self.getTextByKey(self.currentTextOption).name;
                 self.$emit("event_text_loaded", self.rawText);
+                self.$emit("event_title_loaded", self.currentLoadedText);
             }).fail(function(e) {
                 self.$emit("event_error_loading_text");
                 alert("Sorry: There was a problem loading the text.");
