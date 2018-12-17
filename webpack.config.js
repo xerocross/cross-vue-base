@@ -14,6 +14,9 @@ module.exports = {
         libraryTarget : 'umd',
         umdNamedDefine : true
     },
+    externals : {
+        q : 'q'
+    },
     module : {
         rules : [
             {
