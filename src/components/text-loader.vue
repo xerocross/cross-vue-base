@@ -4,13 +4,13 @@
             <div class="form-group">
                 <div 
                     v-if = "!isLoading && !isTextLoaded" 
-                    class="alert alert-primary">Nothing Loaded</div>
+                    class="alert alert-warning">Nothing Loaded</div>
                 <div 
                     v-if = "!isLoading && isTextLoaded" 
-                    class="alert alert-info">Loaded: {{ currentLoadedText }}</div>
+                    class="alert alert-success">Loaded: {{ currentLoadedText }}</div>
                 <div 
                     v-if = "isLoading" 
-                    class="alert alert-primary loading"
+                    class="alert alert-info loading"
                 >
                     {{ loadingText }}
                 </div>
@@ -130,7 +130,7 @@ export default {
 </script>
 <style lang = "scss">
     .text-loader {
-        .alert.alert-info {
+        .alert.alert-info, .alert.alert-warning, .alert.alert-success {
             padding-top: 0px;
             padding-bottom: 0px;
             font-weight: bold;
