@@ -2,7 +2,18 @@
     <div class = "text-loader">
         <form @submit.prevent = "">
             <div class="form-group">
-                <div class="alert alert-info">Loaded: {{ currentLoadedText }}</div>
+                <div 
+                    v-if = "!isLoading && !isTextLoaded" 
+                    class="alert alert-primary">Nothing Loaded</div>
+                <div 
+                    v-if = "!isLoading && isTextLoaded" 
+                    class="alert alert-info">Loaded: {{ currentLoadedText }}</div>
+                <div 
+                    v-if = "isLoading" 
+                    class="alert alert-primary loading"
+                >
+                    {{ loadingText }}
+                </div>
                 <label>
                     Choose a File
                 </label>
@@ -54,7 +65,10 @@ export default {
             isTextLoaded : false,
             status : undefined,
             rawText : "",
-            currentLoadedText : ""
+            currentLoadedText : "",
+            isLoading : false,
+            loadingText : "loading",
+            animationHandle : undefined
         }
     },
     computed : {
@@ -65,11 +79,16 @@ export default {
             return this.isTextLoaded ? this.currentLoadedText : ""
         }
     },
-    watch : {
+    mounted () {
+        this.animateLoading();
+    },
+    beforeDestroy () {
+        clearInterval(this.animationHandle);
     },
     methods : {
         getText () {
             this.isTextLoaded = false;
+            this.isLoading = true;
             let self = this;
             self.$emit("event_loading");
             SimpleQajax.execute({
@@ -77,6 +96,7 @@ export default {
                 method : "GET"
             }).then(function(response){
                 self.isTextLoaded = true;
+                this.isLoading = false;
                 self.rawText = response.responseText;
                 self.currentLoadedText = self.getTextByKey(self.currentTextOption).name;
                 self.$emit("event_text_loaded", self.rawText);
@@ -94,6 +114,16 @@ export default {
                 }
             }
             return null;
+        },
+        animateLoading () {
+            let self = this;
+            this.animationHandle = setInterval(function(){
+                self.loadingText = "LOADING";
+                setTimeout(function(){
+                    self.loadingText = "loading";
+                },500);
+
+            },1000)
         }
     }
 }

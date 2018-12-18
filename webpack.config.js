@@ -15,7 +15,8 @@ module.exports = {
         umdNamedDefine : true
     },
     externals : {
-        q : 'q'
+        q : 'q',
+        vue : "vue"
     },
     module : {
         rules : [
