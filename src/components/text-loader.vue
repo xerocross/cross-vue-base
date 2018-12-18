@@ -2,17 +2,23 @@
     <div class = "text-loader">
         <form @submit.prevent = "">
             <div class="form-group">
-                <div 
-                    v-if = "!isLoading && !isTextLoaded" 
-                    class="alert alert-warning">Nothing Loaded</div>
-                <div 
-                    v-if = "!isLoading && isTextLoaded" 
-                    class="alert alert-success">Loaded: {{ currentLoadedText }}</div>
-                <div 
-                    v-if = "isLoading" 
-                    class="alert alert-info loading"
-                >
-                    {{ loadingText }}
+                <div v-if = "!isFailure">
+                    <div 
+                        v-if = "!isLoading && !isTextLoaded" 
+                        class="alert alert-warning">Nothing Loaded</div>
+                    <div 
+                        v-if = "!isLoading && isTextLoaded" 
+                        class="alert alert-success">Loaded: {{ currentLoadedText }}</div>
+                    <div 
+                        v-if = "isLoading" 
+                        class="alert alert-info loading"
+                    >
+                        {{ loadingText }}
+                    </div>
+                </div>
+                <div v-if="isFailure">
+                    <div 
+                        class="alert alert-danger">Error</div>
                 </div>
                 <label>
                     Choose a File
@@ -68,7 +74,8 @@ export default {
             currentLoadedText : "",
             isLoading : false,
             loadingText : "loading",
-            animationHandle : undefined
+            animationHandle : undefined,
+            isFailure : false
         }
     },
     computed : {
@@ -90,19 +97,21 @@ export default {
             this.isTextLoaded = false;
             this.isLoading = true;
             let self = this;
+            self.isFailure = false;
             self.$emit("event_loading");
             SimpleQajax.execute({
                 URL : this.textURL,
                 method : "GET"
             }).then(function(response){
                 self.isTextLoaded = true;
-                this.isLoading = false;
+                self.isLoading = false;
                 self.rawText = response.responseText;
                 self.currentLoadedText = self.getTextByKey(self.currentTextOption).name;
                 self.$emit("event_text_loaded", self.rawText);
                 self.$emit("event_title_loaded", self.currentLoadedText);
             }).fail(function(e) {
                 self.$emit("event_error_loading_text");
+                self.isFailure = true;
                 alert("Sorry: There was a problem loading the text.");
             });
 
@@ -130,7 +139,7 @@ export default {
 </script>
 <style lang = "scss">
     .text-loader {
-        .alert.alert-info, .alert.alert-warning, .alert.alert-success {
+        .alert.alert-info, .alert.alert-warning, .alert.alert-success, .alert.alert-danger {
             padding-top: 0px;
             padding-bottom: 0px;
             font-weight: bold;
